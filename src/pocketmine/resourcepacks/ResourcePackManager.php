@@ -97,7 +97,6 @@ class ResourcePackManager{
 					if($newPack instanceof ResourcePack){
 						$this->resourcePacks[] = $newPack;
 						$this->uuidList[$newPack->getPackId()] = $newPack;
-						//小文字に変換
 					}
 				}else{
 					$this->server->getLogger()->warning("Skipped resource entry $pack due to file or directory not found");
@@ -132,7 +131,7 @@ class ResourcePackManager{
 	 * @param string $id
 	 * @return ResourcePack|null
 	 */
-	public function getPackById(string $id){//$idは小文字です!!(2018年3月21日確認)
+	public function getPackById(string $id){
 		return $this->uuidList[$id] ?? null;
 	}
 
