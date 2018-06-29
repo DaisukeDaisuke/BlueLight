@@ -135,13 +135,6 @@ use pocketmine\network\mcpe\protocol\UpdateEquipPacket;
 use pocketmine\network\mcpe\protocol\UpdateTradePacket;
 use pocketmine\network\mcpe\protocol\WSConnectPacket;
 
-
-
-
-
-
-
-
 abstract class NetworkSession{
 
 	abstract public function handleDataPacket(DataPacket $packet);
