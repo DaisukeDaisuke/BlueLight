@@ -68,7 +68,7 @@ use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\ShortTag;
 use pocketmine\nbt\tag\StringTag;
-use pocketmine\network\mcpe\protocol\MoveEntityPacket;
+use pocketmine\network\mcpe\protocol\MoveEntityAbsolutePacket;
 use pocketmine\network\mcpe\protocol\RemoveEntityPacket;
 use pocketmine\network\mcpe\protocol\SetEntityDataPacket;
 use pocketmine\network\mcpe\protocol\SetEntityLinkPacket;
@@ -1359,13 +1359,19 @@ abstract class Entity extends Location implements Metadatable{
 		return new Vector3($vector3->x, $vector3->y + $this->baseOffset, $vector3->z);
 	}
 
-	protected function broadcastMovement(){
-		$pk = new MoveEntityPacket();
+	protected function broadcastMovement(bool $teleport = false){
+		$pk = new MoveEntityAbsolutePacket();
 		$pk->entityRuntimeId = $this->id;
 		$pk->position = $this->getOffsetPosition($this);
-		$pk->yaw = $this->yaw;
-		$pk->pitch = $this->pitch;
-		$pk->headYaw = $this->yaw; //TODO
+		//this looks very odd but is correct as of 1.5.0.7
+		//for arrows this is actually x/y/z rotation
+		//for mobs x and z are used for pitch and yaw, and y is used for headyaw
+		$pk->xRot = $this->pitch;
+		$pk->yRot = $this->yaw; //TODO: head yaw
+		$pk->zRot = $this->yaw;
+		if($teleport){
+			$pk->flags |= MoveEntityAbsolutePacket::FLAG_TELEPORT;
+		}
 
 		$this->level->addChunkPacket($this->chunk->getX(), $this->chunk->getZ(), $pk);
 	}
