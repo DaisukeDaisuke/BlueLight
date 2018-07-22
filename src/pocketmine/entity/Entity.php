@@ -73,6 +73,7 @@ use pocketmine\network\mcpe\protocol\RemoveEntityPacket;
 use pocketmine\network\mcpe\protocol\SetEntityDataPacket;
 use pocketmine\network\mcpe\protocol\SetEntityLinkPacket;
 use pocketmine\network\mcpe\protocol\SetEntityMotionPacket;
+use pocketmine\network\mcpe\protocol\AddPlayerPacket;
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\Server;
@@ -966,13 +967,34 @@ abstract class Entity extends Location implements Metadatable{
 		$pk->entityRuntimeId = $this->getId();
 		$pk->metadata = $data ?? $this->dataProperties;
 
+		$includeNametag = isset($data[self::DATA_NAMETAG]);
+		if(($isPlayer = $this instanceof Player) and $includeNametag){
+			$remove = new RemoveEntityPacket();
+			$remove->entityUniqueId = $this->getId();
+			$add = new AddPlayerPacket();
+			$add->uuid = $this->getUniqueId();
+			$add->username = $this->getNameTag();
+			$add->entityRuntimeId = $this->getId();
+			$add->position = $this->asVector3();
+			$add->motion = $this->getMotion();
+			$add->yaw = $this->yaw;
+			$add->pitch = $this->pitch;
+			$add->item = $this->getInventory()->getItemInHand();
+			$add->metadata = $this->dataProperties;
+		}
+
 		foreach($player as $p){
 			if($p === $this){
 				continue;
 			}
 			$p->dataPacket(clone $pk);
-		}
 
+			// HACK
+			if($isPlayer and $includeNametag){
+				$p->dataPacket(clone $remove);
+				$p->dataPacket(clone $add);
+			}
+		}
 		if($this instanceof Player){
 			$this->dataPacket($pk);
 		}
