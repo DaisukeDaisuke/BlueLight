@@ -68,11 +68,12 @@ use pocketmine\nbt\tag\FloatTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\ShortTag;
 use pocketmine\nbt\tag\StringTag;
-use pocketmine\network\mcpe\protocol\MoveEntityPacket;
+use pocketmine\network\mcpe\protocol\MoveEntityAbsolutePacket;
 use pocketmine\network\mcpe\protocol\RemoveEntityPacket;
 use pocketmine\network\mcpe\protocol\SetEntityDataPacket;
 use pocketmine\network\mcpe\protocol\SetEntityLinkPacket;
 use pocketmine\network\mcpe\protocol\SetEntityMotionPacket;
+use pocketmine\network\mcpe\protocol\AddPlayerPacket;
 use pocketmine\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\Server;
@@ -966,13 +967,34 @@ abstract class Entity extends Location implements Metadatable{
 		$pk->entityRuntimeId = $this->getId();
 		$pk->metadata = $data ?? $this->dataProperties;
 
+		$includeNametag = isset($data[self::DATA_NAMETAG]);
+		if(($isPlayer = $this instanceof Player) and $includeNametag){
+			$remove = new RemoveEntityPacket();
+			$remove->entityUniqueId = $this->getId();
+			$add = new AddPlayerPacket();
+			$add->uuid = $this->getUniqueId();
+			$add->username = $this->getNameTag();
+			$add->entityRuntimeId = $this->getId();
+			$add->position = $this->asVector3();
+			$add->motion = $this->getMotion();
+			$add->yaw = $this->yaw;
+			$add->pitch = $this->pitch;
+			$add->item = $this->getInventory()->getItemInHand();
+			$add->metadata = $this->dataProperties;
+		}
+
 		foreach($player as $p){
 			if($p === $this){
 				continue;
 			}
 			$p->dataPacket(clone $pk);
-		}
 
+			// HACK
+			if($isPlayer and $includeNametag){
+				$p->dataPacket(clone $remove);
+				$p->dataPacket(clone $add);
+			}
+		}
 		if($this instanceof Player){
 			$this->dataPacket($pk);
 		}
@@ -1359,13 +1381,19 @@ abstract class Entity extends Location implements Metadatable{
 		return new Vector3($vector3->x, $vector3->y + $this->baseOffset, $vector3->z);
 	}
 
-	protected function broadcastMovement(){
-		$pk = new MoveEntityPacket();
+	protected function broadcastMovement(bool $teleport = false){
+		$pk = new MoveEntityAbsolutePacket();
 		$pk->entityRuntimeId = $this->id;
 		$pk->position = $this->getOffsetPosition($this);
-		$pk->yaw = $this->yaw;
-		$pk->pitch = $this->pitch;
-		$pk->headYaw = $this->yaw; //TODO
+		//this looks very odd but is correct as of 1.5.0.7
+		//for arrows this is actually x/y/z rotation
+		//for mobs x and z are used for pitch and yaw, and y is used for headyaw
+		$pk->xRot = $this->pitch;
+		$pk->yRot = $this->yaw; //TODO: head yaw
+		$pk->zRot = $this->yaw;
+		if($teleport){
+			$pk->flags |= MoveEntityAbsolutePacket::FLAG_TELEPORT;
+		}
 
 		$this->level->addChunkPacket($this->chunk->getX(), $this->chunk->getZ(), $pk);
 	}
