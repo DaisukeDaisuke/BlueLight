@@ -38,6 +38,8 @@ use pocketmine\nbt\tag\IntTag;
 use pocketmine\nbt\tag\ListTag;
 use pocketmine\nbt\tag\StringTag;
 use pocketmine\network\mcpe\protocol\AddPlayerPacket;
+use pocketmine\network\mcpe\protocol\PlayerListPacket;
+use pocketmine\network\mcpe\protocol\types\PlayerListEntry;
 use pocketmine\Player;
 use pocketmine\utils\UUID;
 
@@ -503,9 +505,13 @@ class Human extends Creature implements ProjectileSource, InventoryHolder{
 			}
 
 			if(!($this instanceof Player)){
-				$this->server->updatePlayerListData($this->getUniqueId(), $this->getId(), $this->getName(), $this->skinId, $this->skin, [$player]);
+				/* we don't use Server->updatePlayerListData() because that uses batches, which could cause race conditions in async compression mode */
+				$pk = new PlayerListPacket();
+				$pk->type = PlayerListPacket::TYPE_ADD;
+				$pk->entries = [PlayerListEntry::createAdditionEntry($this->uuid, $this->id, $this->getName(),$this->skinId,$this->skin,$this->getName(), 0)];
+				$player->dataPacket($pk);
 			}
-
+			
 			$pk = new AddPlayerPacket();
 			$pk->uuid = $this->getUniqueId();
 			$pk->username = $this->getName();
@@ -524,7 +530,10 @@ class Human extends Creature implements ProjectileSource, InventoryHolder{
 			$this->inventory->sendArmorContents($player);
 
 			if(!($this instanceof Player)){
-				$this->server->removePlayerListData($this->getUniqueId(), [$player]);
+				$pk = new PlayerListPacket();
+				$pk->type = PlayerListPacket::TYPE_REMOVE;
+				$pk->entries = [PlayerListEntry::createRemovalEntry($this->uuid)];
+				$player->dataPacket($pk);
 			}
 		}
 	}
