@@ -511,7 +511,7 @@ class Human extends Creature implements ProjectileSource, InventoryHolder{
 				$pk->entries = [PlayerListEntry::createAdditionEntry($this->uuid, $this->id, $this->getName(),$this->skinId,$this->skin,$this->getName(), 0)];
 				$player->dataPacket($pk);
 			}
-			
+
 			$pk = new AddPlayerPacket();
 			$pk->uuid = $this->getUniqueId();
 			$pk->username = $this->getName();
