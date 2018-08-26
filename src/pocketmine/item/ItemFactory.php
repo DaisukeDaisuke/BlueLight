@@ -236,6 +236,8 @@ class ItemFactory{
 			//TODO: COOKED_SALMON
 
 			self::registerItem(new GoldenAppleEnchanted());
+
+			 self::registerItem(new Fireworks());
 		}
 
 		Item::initCreativeItems();

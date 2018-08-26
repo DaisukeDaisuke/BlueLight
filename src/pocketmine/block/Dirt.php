@@ -44,6 +44,9 @@ class Dirt extends Solid{
 	}
 
 	public function getName() : string{
+		if($this->meta === 1){
+			return "Coarse Dirt";
+		}
 		return "Dirt";
 	}
 

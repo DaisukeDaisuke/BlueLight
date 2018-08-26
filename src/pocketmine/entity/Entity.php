@@ -109,7 +109,7 @@ abstract class Entity extends Location implements Metadatable{
 	const DATA_PADDLE_TIME_LEFT = 13; //float
 	const DATA_PADDLE_TIME_RIGHT = 14; //float
 	const DATA_EXPERIENCE_VALUE = 15; //int (xp orb)
-	const DATA_MINECART_DISPLAY_BLOCK = 16; //int (id | (data << 16))
+	const DATA_DISPLAY_ITEM = 16; //int (id | (data << 16))
 	const DATA_MINECART_DISPLAY_OFFSET = 17; //int
 	const DATA_MINECART_HAS_DISPLAY = 18; //byte (must be 1 for minecart to show block inside)
 
@@ -247,6 +247,7 @@ abstract class Entity extends Location implements Metadatable{
 		Entity::registerEntity(FallingSand::class);
 		Entity::registerEntity(PrimedTNT::class);
 		Entity::registerEntity(FishingHook::class);
+		Entity::registerEntity(FireworksRocket::class);
 		Entity::registerEntity(Snowball::class);
 		Entity::registerEntity(Villager::class);
 		Entity::registerEntity(Zombie::class);
@@ -301,6 +302,7 @@ abstract class Entity extends Location implements Metadatable{
 		Entity::registerEntity(Vindicator::class);
 		Entity::registerEntity(Evoker::class);
 		Entity::registerEntity(Vex::class);
+
 	}
 
 	/**
