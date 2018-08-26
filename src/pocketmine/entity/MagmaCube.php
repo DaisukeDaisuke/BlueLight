@@ -42,7 +42,7 @@ class MagmaCube extends Slime{
 	public function spawnTo(Player $player){
 		$pk = new AddEntityPacket();
 		$pk->entityRuntimeId = $this->getId();
-		$pk->type = LavaSlime::NETWORK_ID;
+		$pk->type = self::NETWORK_ID;
 	
 		$pk->position = $this->asVector3();
 

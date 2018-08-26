@@ -70,23 +70,30 @@ class FloatingTextParticle extends Particle{
 			$p[] = $pk0;
 		}
 		if(!$this->invisible){
+			$uuid = UUID::fromRandom();
+			$name = $this->title . ($this->text !== "" ? "\n" . $this->text : "");
+			$add = new PlayerListPacket();
+			$add->type = PlayerListPacket::TYPE_ADD;
+			$add->entries = [PlayerListEntry::createAdditionEntry($uuid, $this->entityId, $name, "Standard_Custom", str_repeat("\x00", 8192),$name, 0)];
+			$p[] = $add;
 			$pk = new AddPlayerPacket();
-			$pk->uuid = UUID::fromRandom();
-			$pk->username = "";
+			$pk->uuid = $uuid;
+			$pk->username = $name;
 			$pk->entityRuntimeId = $this->entityId;
 			$pk->position = $this->asVector3(); //TODO: check offset
 			$pk->item = ItemFactory::get(Item::AIR, 0, 0);
 			$flags = (
-				(1 << Entity::DATA_FLAG_CAN_SHOW_NAMETAG) |
-				(1 << Entity::DATA_FLAG_ALWAYS_SHOW_NAMETAG) |
-				(1 << Entity::DATA_FLAG_IMMOBILE)
+				1 << Entity::DATA_FLAG_IMMOBILE
 			);
 			$pk->metadata = [
 				Entity::DATA_FLAGS =>   [Entity::DATA_TYPE_LONG,   $flags],
-				Entity::DATA_NAMETAG => [Entity::DATA_TYPE_STRING, $this->title . ($this->text !== "" ? "\n" . $this->text : "")],
 				Entity::DATA_SCALE =>   [Entity::DATA_TYPE_FLOAT,  0.01] //zero causes problems on debug builds
 			];
 			$p[] = $pk;
+			$remove = new PlayerListPacket();
+			$remove->type = PlayerListPacket::TYPE_REMOVE;
+			$remove->entries = [PlayerListEntry::createRemovalEntry($uuid)];
+			$p[] = $remove;
 		}
 		return $p;
 	}
