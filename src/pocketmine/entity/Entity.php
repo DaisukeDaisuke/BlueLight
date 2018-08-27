@@ -685,7 +685,7 @@ abstract class Entity extends Location implements Metadatable{
 	 */
 	public function setLink(Entity $entity){
 		if($entity instanceof Rideable){
-			$this->setDataProperty(Entity::DATA_RIDE_POSITION, Entity::DATA_TYPE_VECTOR3F, $entity->getRidePosition(), true);
+			$this->setDataProperty(Entity::DATA_RIDER_SEAT_POSITION, Entity::DATA_TYPE_VECTOR3F, $entity->getRidePosition(), true);
 		}
 
 		$entity->ridingEntity = $this;
