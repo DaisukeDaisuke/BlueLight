@@ -29,9 +29,13 @@ namespace pocketmine\network\mcpe\protocol;
 use pocketmine\math\Vector3;
 use pocketmine\network\mcpe\NetworkSession;
 use pocketmine\network\mcpe\protocol\types\PlayerPermissions;
+use pocketmine\utils\BinaryStream;
 
 class StartGamePacket extends DataPacket{
 	const NETWORK_ID = ProtocolInfo::START_GAME_PACKET;
+
+	/** @var string|null */
+	private static $runtimeIdTable;
 
 	/** @var int */
 	public $entityUniqueId;
@@ -125,6 +129,8 @@ class StartGamePacket extends DataPacket{
 	public $platformBroadcastMode = 0;
 	/** @var bool */
 	public $xboxLiveBroadcastIntent = false;
+	/** @var string */
+	public $multiplayerCorrelationId = ""; //TODO: this should be filled with a UUID of some sort
 
 	protected function decodePayload(){
 		$this->entityUniqueId = $this->getEntityUniqueId();
@@ -175,6 +181,14 @@ class StartGamePacket extends DataPacket{
 		$this->currentTick = $this->getLLong();
 
 		$this->enchantmentSeed = $this->getVarInt();
+
+		$count = $this->getUnsignedVarInt();
+		for($i = 0; $i < $count; ++$i){
+			$this->getString();
+			$this->getLShort();
+		}
+	
+		$this->multiplayerCorrelationId = $this->getString();
 	}
 
 	protected function encodePayload(){
@@ -226,6 +240,20 @@ class StartGamePacket extends DataPacket{
 		$this->putLLong($this->currentTick);
 
 		$this->putVarInt($this->enchantmentSeed);
+		if(self::$runtimeIdTable === null){
+			//this is a really nasty hack, but it'll do for now
+			$stream = new BinaryStream();
+			$data = json_decode(file_get_contents(\pocketmine\RESOURCE_PATH . "runtimeid_table.json"), true);
+			$stream->putUnsignedVarInt(count($data));
+			foreach($data as $v){
+				$stream->putString($v["name"]);
+				$stream->putLShort($v["data"]);
+			}
+			self::$runtimeIdTable = $stream->buffer;
+		}
+		$this->put(self::$runtimeIdTable);
+	
+		$this->putString($this->multiplayerCorrelationId);
 	}
 
 	public function handle(NetworkSession $session) : bool{
