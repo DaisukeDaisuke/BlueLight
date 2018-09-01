@@ -76,9 +76,13 @@ class Horse extends Living implements Rideable{
 		$pk->yaw = $this->yaw;
 		$pk->pitch = $this->pitch;
 		$button = $player->getServer()->getLanguage()->translateString("entity.horse.button");
-		@$flags |= 1 << Entity::DATA_FLAG_SADDLED;
-		@$flags |= 1 << Entity::DATA_FLAG_CAN_SHOW_NAMETAG;
-		@$flags |= 1 << Entity::DATA_FLAG_ALWAYS_SHOW_NAMETAG;
+		$flags = (
+			(1 << Entity::DATA_FLAG_WASD_CONTROLLED) |
+			(1 << Entity::DATA_FLAG_CAN_POWER_JUMP) |
+			(1 << Entity::DATA_FLAG_SADDLED) |
+			(1 << Entity::DATA_FLAG_CAN_SHOW_NAMETAG) |
+			(1 << Entity::DATA_FLAG_ALWAYS_SHOW_NAMETAG)
+		);
 		$pk->metadata = [
 			Entity::DATA_FLAGS => [Entity::DATA_TYPE_LONG, $flags],
 			Entity::DATA_AIR => [Entity::DATA_TYPE_SHORT, 400],
@@ -149,6 +153,7 @@ class Horse extends Living implements Rideable{
 			$this->x -= $movex/2;
 			$this->z -= $movez/2;
 		}
+		$this->updateMovement();
 	}
 	public function goStraight(Player $player){
 
@@ -163,6 +168,7 @@ class Horse extends Living implements Rideable{
 			$this->x += $movex;
 			$this->z += $movez;
 		}
+		$this->updateMovement();
 	}
 
 	public function getXZ($yaw,$pitch){

@@ -88,6 +88,13 @@ class AvailableCommandsPacket extends DataPacket{
 	 */
 	public $commandData = [];
 
+	/**
+	 * @var CommandEnum[]
+	 * List of dynamic command enums, also referred to as "soft" enums. These can by dynamically updated mid-game
+	 * without resending this packet.
+	 */
+	public $softEnums = [];
+
 	protected function decodePayload(){
 		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
 			$this->enumValues[] = $this->getString();
@@ -106,6 +113,10 @@ class AvailableCommandsPacket extends DataPacket{
 
 		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
 			$this->commandData[] = $this->getCommandData();
+		}
+
+		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
+			$this->softEnums[] = $this->getSoftEnum();
 		}
 	}
 
@@ -133,6 +144,16 @@ class AvailableCommandsPacket extends DataPacket{
 		}else{
 			return $this->getLInt();
 		}
+	}
+
+	protected function getSoftEnum() : CommandEnum{
+		$retval = new CommandEnum();
+		$retval->enumName = $this->getString();
+		for($i = 0, $count = $this->getUnsignedVarInt(); $i < $count; ++$i){
+			//Get the enum value from the initial pile of mess
+			$retval->enumValues[] = $this->getString();
+		}
+		return $retval;
 	}
 
 	protected function getCommandData(){
