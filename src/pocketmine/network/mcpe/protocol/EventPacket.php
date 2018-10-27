@@ -40,6 +40,9 @@ class EventPacket extends DataPacket{
 	const TYPE_BOSS_KILLED = 7;
 	const TYPE_AGENT_COMMAND = 8;
 	const TYPE_AGENT_CREATED = 9;
+	const TYPE_PATTERN_REMOVED = 10; //???
+	const TYPE_COMMANED_EXECUTED = 11;
+	const TYPE_FISH_BUCKETED = 12;
 
 	/** @var int */
 	public $playerRuntimeId;

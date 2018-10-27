@@ -131,6 +131,8 @@ class StartGamePacket extends DataPacket{
 	public $xboxLiveBroadcastIntent = false;
 	/** @var string */
 	public $multiplayerCorrelationId = ""; //TODO: this should be filled with a UUID of some sort
+	/** @var bool */
+	public $useMsaGamertagsOnly = false;
 
 	protected function decodePayload(){
 		$this->entityUniqueId = $this->getEntityUniqueId();
@@ -173,6 +175,7 @@ class StartGamePacket extends DataPacket{
 		$this->hasLockedBehaviorPack = $this->getBool();
 		$this->hasLockedResourcePack = $this->getBool();
 		$this->isFromLockedWorldTemplate = $this->getBool();
+		$this->useMsaGamertagsOnly = $this->getBool();
 
 		$this->levelId = $this->getString();
 		$this->worldName = $this->getString();
@@ -232,6 +235,7 @@ class StartGamePacket extends DataPacket{
 		$this->putBool($this->hasLockedBehaviorPack);
 		$this->putBool($this->hasLockedResourcePack);
 		$this->putBool($this->isFromLockedWorldTemplate);
+		$this->putBool($this->useMsaGamertagsOnly);
 
 		$this->putString($this->levelId);
 		$this->putString($this->worldName);

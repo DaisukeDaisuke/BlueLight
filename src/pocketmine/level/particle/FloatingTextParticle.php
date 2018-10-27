@@ -74,7 +74,7 @@ class FloatingTextParticle extends Particle{
 			$name = $this->title . ($this->text !== "" ? "\n" . $this->text : "");
 			$add = new PlayerListPacket();
 			$add->type = PlayerListPacket::TYPE_ADD;
-			$add->entries = [PlayerListEntry::createAdditionEntry($uuid, $this->entityId, $name, "Standard_Custom", str_repeat("\x00", 8192),$name, 0)];
+			$add->entries = [PlayerListEntry::createAdditionEntry($uuid, $this->entityId, $name, "Standard_Custom", str_repeat("\x00", 8192))];
 			$p[] = $add;
 			$pk = new AddPlayerPacket();
 			$pk->uuid = $uuid;

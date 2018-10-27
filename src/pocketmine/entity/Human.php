@@ -508,7 +508,7 @@ class Human extends Creature implements ProjectileSource, InventoryHolder{
 				/* we don't use Server->updatePlayerListData() because that uses batches, which could cause race conditions in async compression mode */
 				$pk = new PlayerListPacket();
 				$pk->type = PlayerListPacket::TYPE_ADD;
-				$pk->entries = [PlayerListEntry::createAdditionEntry($this->uuid, $this->id, $this->getName(),$this->skinId,$this->skin,$this->getName(), 0)];
+				$pk->entries = [PlayerListEntry::createAdditionEntry($this->uuid, $this->id, $this->getName(),$this->skinId,$this->skin)];
 				$player->dataPacket($pk);
 			}
 

@@ -46,29 +46,29 @@ class Fireworks extends Item{
 	const TYPE_STAR = 2;
 	const TYPE_CREEPER_HEAD = 3;
 	const TYPE_BURST = 4;
-	const COLOR_BLACK = "\x00";
-	const COLOR_RED = "\x01";
-	const COLOR_DARK_GREEN = "\x02";
-	const COLOR_BROWN = "\x03";
-	const COLOR_BLUE = "\x04";
-	const COLOR_DARK_PURPLE = "\x05";
-	const COLOR_DARK_AQUA = "\x06";
-	const COLOR_GRAY = "\x07";
-	const COLOR_DARK_GRAY = "\x08";
-	const COLOR_PINK = "\x09";
-	const COLOR_GREEN = "\x0a";
-	const COLOR_YELLOW = "\x0b";
-	const COLOR_LIGHT_AQUA = "\x0c";
-	const COLOR_DARK_PINK = "\x0d";
-	const COLOR_GOLD = "\x0e";
-	const COLOR_WHITE = "\x0f";
+	const COLOR_BLACK = 0;
+	const COLOR_RED = 1;
+	const COLOR_GREEN = 2;
+	const COLOR_BROWN = 3;
+	const COLOR_BLUE = 4;
+	const COLOR_PURPLE = 5;
+	const COLOR_CYAN = 6;
+	const COLOR_LIGHT_GRAY = 7;
+	const COLOR_GRAY = 8;
+	const COLOR_PINK = 9;
+	const COLOR_LIME = 10;
+	const COLOR_YELLOW = 11;
+	const COLOR_LIGHT_BLUE = 12;
+	const COLOR_MAGENTA = 13;
+	const COLOR_ORANGE = 14;
+	const COLOR_WHITE = 15;
 
 	public function __construct(int $meta = 0){
 		parent::__construct(self::FIREWORKS, $meta, "Fireworks");
 	}
 
 	public function onActivate(Level $level, Player $player, Block $block, Block $target, int $face, Vector3 $facePos) : bool{
-		$nbt = $this->createBaseNBT($block->add(0.5, 0, 0.5), new Vector3(0.001, 0.05, 0.001), lcg_value() * 360, 90);
+		$nbt = self::createBaseNBT($block->add(0.5, 0, 0.5), new Vector3(0.001, 0.05, 0.001), lcg_value() * 360, 90);
 		$entity = Entity::createEntity("FireworksRocket", $player->getLevel(), $nbt, $this);
 		if($entity instanceof Entity){
 			--$this->count;
@@ -85,16 +85,15 @@ class Fireworks extends Item{
 				(-sin($player->pitch / 180 * M_PI) * self::BOOST_POWER),
 				(cos($player->yaw / 180 * M_PI) * cos($player->pitch / 180 * M_PI) * self::BOOST_POWER)
 			);
-			$nbt = $this->createBaseNBT($player, $motion->subtract(0, 0.1, 0), lcg_value() * 360, 90);
+			$nbt =  self::createBaseNBT($player, $motion->subtract(0, 0.1, 0), lcg_value() * 360, 90);
 			$entity = Entity::createEntity("FireworksRocket", $player->getLevel(), $nbt, $this);
 			if($entity instanceof Entity){
 				--$this->count;
 				$entity->spawnToAll();
 				$player->setMotion($motion);
-				//$player->getLevel()->addSound(new GenericSound($player, LevelEventPacket::EVENT_SOUND_BLAZE_SHOOT));
+				$player->getLevel()->addSound(new GenericSound($player, LevelEventPacket::EVENT_SOUND_BLAZE_SHOOT));
 				return true;
 			}
-			return true;
 		}
 		return false;
 	}
@@ -102,8 +101,45 @@ class Fireworks extends Item{
 	public function getFlightDuration(){
 		return $this->getNamedTag()["Fireworks"]["Flight"] ?? 1;
 	}
-	
-	public function createBaseNBT(Vector3 $pos, Vector3 $motion = null, float $yaw = 0.0, float $pitch = 0.0){
+
+	public function addExplosion($fireworkColor = 0,$fireworkFade = null, $fireworkType = 0, $Flight = 1, $fireworkFlicker = false, $fireworkTrail = false){
+		if($fireworkFade === null){
+			return $this->setCompoundTag(
+				new CompoundTag("", [
+					new CompoundTag("Fireworks", [
+						new ListTag("Explosions", [
+							new CompoundTag("", [
+								new ByteArrayTag("FireworkColor", chr($fireworkColor)),
+								new ByteTag("FireworkFlicker",$fireworkFlicker ? 1 : 0),
+								new ByteTag("FireworkTrail", $fireworkTrail ? 1 : 0),
+								new ByteTag("FireworkType", $fireworkType),
+							]),
+						]),
+						new ByteTag("Flight", $Flight),
+					]),
+				])
+			);
+		}else{
+			return $this->setCompoundTag(
+				new CompoundTag("", [
+					new CompoundTag("Fireworks", [
+						new ListTag("Explosions", [
+							new CompoundTag("", [
+								new ByteArrayTag("FireworkColor", chr($fireworkColor)),
+								new ByteArrayTag("FireworkFade", chr($fireworkFade)),
+								new ByteTag("FireworkFlicker",$fireworkFlicker ? 1 : 0),
+								new ByteTag("FireworkTrail", $fireworkTrail ? 1 : 0),
+								new ByteTag("FireworkType", $fireworkType),
+							]),
+						]),
+						new ByteTag("Flight", $Flight),
+					]),
+				])
+			);
+		}
+	}
+
+	public static function createBaseNBT(Vector3 $pos, Vector3 $motion = null, float $yaw = 0.0, float $pitch = 0.0){
 		return new CompoundTag("", [
 			new ListTag("Pos", [
 				new DoubleTag("", $pos->x),
