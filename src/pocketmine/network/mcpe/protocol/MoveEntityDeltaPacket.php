@@ -35,8 +35,10 @@ class MoveEntityDeltaPacket extends DataPacket{
 	const FLAG_HAS_Z = 0x04;
 	const FLAG_HAS_ROT_X = 0x08;
 	const FLAG_HAS_ROT_Y = 0x10;
-	const FLAG_HAS_ROT_Z = 0x20;
+	 const FLAG_HAS_ROT_Z = 0x20;
 
+	/** @var int */
+	public $entityRuntimeId;
 	/** @var int */
 	public $flags;
 	/** @var int */
@@ -67,6 +69,7 @@ class MoveEntityDeltaPacket extends DataPacket{
 	}
 
 	protected function decodePayload(){
+		$this->entityRuntimeId = $this->getEntityRuntimeId();
 		$this->flags = $this->getByte();
 		$this->xDiff = $this->maybeReadCoord(self::FLAG_HAS_X);
 		$this->yDiff = $this->maybeReadCoord(self::FLAG_HAS_Y);
@@ -89,6 +92,7 @@ class MoveEntityDeltaPacket extends DataPacket{
 	}
 
 	protected function encodePayload(){
+		$this->putEntityRuntimeId($this->entityRuntimeId);
 		$this->putByte($this->flags);
 		$this->maybeWriteCoord(self::FLAG_HAS_X, $this->xDiff);
 		$this->maybeWriteCoord(self::FLAG_HAS_Y, $this->yDiff);

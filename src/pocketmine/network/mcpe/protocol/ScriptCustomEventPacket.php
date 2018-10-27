@@ -21,25 +21,31 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\network\mcpe\protocol\types;
+namespace pocketmine\network\mcpe\protocol;
 
-class ScorePacketEntry{
-	const TYPE_PLAYER = 1;
-	const TYPE_ENTITY = 2;
-	const TYPE_FAKE_PLAYER = 3;
+#include <rules/DataPacket.h>
 
-	/** @var int */
-	public $scoreboardId;
+use pocketmine\network\mcpe\NetworkSession;
+
+class ScriptCustomEventPacket extends DataPacket{
+	const NETWORK_ID = ProtocolInfo::SCRIPT_CUSTOM_EVENT_PACKET;
+
 	/** @var string */
-	public $objectiveName;
-	/** @var int */
-	public $score;
+	public $eventName;
+	/** @var string json data */
+	public $eventData;
 
-	/** @var int */
-	public $type;
+	protected function decodePayload() : void{
+		$this->eventName = $this->getString();
+		$this->eventData = $this->getString();
+	}
 
-	/** @var int|null (if type entity or player) */
-	public $entityUniqueId;
-	/** @var string|null (if type fake player) */
-	public $customName;
+	protected function encodePayload() : void{
+		$this->putString($this->eventName);
+		$this->putString($this->eventData);
+	}
+
+	public function handle(NetworkSession $handler) : bool{
+		return $handler->handleScriptCustomEvent($this);
+	}
 }

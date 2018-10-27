@@ -32,10 +32,6 @@ class PlayerListEntry{
 	/** @var string */
 	public $username;
 	/** @var string */
-	public $thirdPartyName = "";
-	/** @var int */
-	public $platform = 0;
-	/** @var string */
 	public $platformChatId = "";
 	/** @var Skin */
 	public $skin;
@@ -52,8 +48,6 @@ public static function createAdditionEntry(
 		string $username,
 		string $skinId,
 		string $skinData,
-		string $thirdPartyName,
-		int $platform,
 		string $capeData = "",
 		string $geometryModel = "",
 		string $geometryData = "",
@@ -69,8 +63,6 @@ public static function createAdditionEntry(
 		$entry->geometryModel = $geometryModel;
 		$entry->geometryData = $geometryData;
 		$entry->xboxUserId = $xboxUserId;
-		$entry->thirdPartyName = $thirdPartyName;
-		$entry->platform = $platform;
 		return $entry;
 	}
 

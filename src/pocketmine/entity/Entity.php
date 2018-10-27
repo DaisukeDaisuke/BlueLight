@@ -207,34 +207,38 @@ abstract class Entity extends Location implements Metadatable{
 	const DATA_FLAG_INTERESTED = 26;
 	const DATA_FLAG_CHARGED = 27;
 	const DATA_FLAG_TAMED = 28;
-	const DATA_FLAG_LEASHED = 29;
-	const DATA_FLAG_SHEARED = 30;
-	const DATA_FLAG_GLIDING = 31;
-	const DATA_FLAG_ELDER = 32;
-	const DATA_FLAG_MOVING = 33;
-	const DATA_FLAG_BREATHING = 34;
-	const DATA_FLAG_CHESTED = 35;
-	const DATA_FLAG_STACKABLE = 36;
-	const DATA_FLAG_SHOWBASE = 37;
-	const DATA_FLAG_REARING = 38;
-	const DATA_FLAG_VIBRATING = 39;
-	const DATA_FLAG_IDLING = 40;
-	const DATA_FLAG_EVOKER_SPELL = 41;
-	const DATA_FLAG_CHARGE_ATTACK = 42;
-	const DATA_FLAG_WASD_CONTROLLED = 43;
-	const DATA_FLAG_CAN_POWER_JUMP = 44;
-	const DATA_FLAG_LINGER = 45;
-	const DATA_FLAG_HAS_COLLISION = 46;
-	const DATA_FLAG_AFFECTED_BY_GRAVITY = 47;
-	const DATA_FLAG_FIRE_IMMUNE = 48;
-	const DATA_FLAG_DANCING = 49;
-	const DATA_FLAG_ENCHANTED = 50;
-	//51 is something to do with tridents
-	const DATA_FLAG_CONTAINER_PRIVATE = 52; //inventory is private, doesn't drop contents when killed if true
-	//53 TransformationComponent
-	const DATA_FLAG_SPIN_ATTACK = 54;
-	const DATA_FLAG_SWIMMING = 55;
-	const DATA_FLAG_BRIBED = 56; //dolphins have this set when they go to find treasure for the player
+	const DATA_FLAG_ORPHANED = 29;
+	const DATA_FLAG_LEASHED = 30;
+	const DATA_FLAG_SHEARED = 31;
+	const DATA_FLAG_GLIDING = 32;
+	const DATA_FLAG_ELDER = 33;
+	const DATA_FLAG_MOVING = 34;
+	const DATA_FLAG_BREATHING = 35;
+	const DATA_FLAG_CHESTED = 36;
+	const DATA_FLAG_STACKABLE = 37;
+	const DATA_FLAG_SHOWBASE = 38;
+	const DATA_FLAG_REARING = 39;
+	const DATA_FLAG_VIBRATING = 40;
+	const DATA_FLAG_IDLING = 41;
+	const DATA_FLAG_EVOKER_SPELL = 42;
+	const DATA_FLAG_CHARGE_ATTACK = 43;
+	const DATA_FLAG_WASD_CONTROLLED = 44;
+	const DATA_FLAG_CAN_POWER_JUMP = 45;
+	const DATA_FLAG_LINGER = 46;
+	const DATA_FLAG_HAS_COLLISION = 47;
+	const DATA_FLAG_AFFECTED_BY_GRAVITY = 48;
+	const DATA_FLAG_FIRE_IMMUNE = 49;
+	const DATA_FLAG_DANCING = 50;
+	const DATA_FLAG_ENCHANTED = 51;
+	const DATA_FLAG_SHOW_TRIDENT_ROPE = 52; // tridents show an animated rope when enchanted with loyalty after they are thrown and return to their owner. To be combined with DATA_OWNER_EID
+	const DATA_FLAG_CONTAINER_PRIVATE = 53; //inventory is private, doesn't drop contents when killed if true
+	//54 TransformationComponent
+	const DATA_FLAG_SPIN_ATTACK = 55;
+	const DATA_FLAG_SWIMMING = 56;
+	const DATA_FLAG_BRIBED = 57; //dolphins have this set when they go to find treasure for the player
+	const DATA_FLAG_PREGNANT = 58;
+	const DATA_FLAG_LAYING_EGG = 59;
+	//60 ??
 
 	public static $entityCount = 1;
 	/** @var Entity[] */
