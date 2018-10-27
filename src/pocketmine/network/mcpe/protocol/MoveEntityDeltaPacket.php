@@ -35,7 +35,7 @@ class MoveEntityDeltaPacket extends DataPacket{
 	const FLAG_HAS_Z = 0x04;
 	const FLAG_HAS_ROT_X = 0x08;
 	const FLAG_HAS_ROT_Y = 0x10;
-	 const FLAG_HAS_ROT_Z = 0x20;
+	const FLAG_HAS_ROT_Z = 0x20;
 
 	/** @var int */
 	public $entityRuntimeId;
