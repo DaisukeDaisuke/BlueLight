@@ -47,7 +47,8 @@ class PlayerSkinPacket extends DataPacket{
 	public $geometryModel;
 	/** @var string */
 	public $geometryData;
-
+	/** @var bool */
+	public $premiumSkin = false;
 
 	protected function decodePayload(){
 		$this->uuid = $this->getUUID();
@@ -58,6 +59,8 @@ class PlayerSkinPacket extends DataPacket{
 		$this->capeData = $this->getString();
 		$this->geometryModel = $this->getString();
 		$this->geometryData = $this->getString();
+
+		$this->premiumSkin = $this->getBool();
 	}
 
 	protected function encodePayload(){
@@ -69,6 +72,8 @@ class PlayerSkinPacket extends DataPacket{
 		$this->putString($this->capeData);
 		$this->putString($this->geometryModel);
 		$this->putString($this->geometryData);
+
+		$this->putBool($this->premiumSkin);
 	}
 
 

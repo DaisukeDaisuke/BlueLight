@@ -133,6 +133,10 @@ class StartGamePacket extends DataPacket{
 	public $multiplayerCorrelationId = ""; //TODO: this should be filled with a UUID of some sort
 	/** @var bool */
 	public $useMsaGamertagsOnly = false;
+	/** @var bool */
+	public $isFromWorldTemplate = false;
+	/** @var bool */
+	public $isWorldTemplateOptionLocked = false;
 
 	protected function decodePayload(){
 		$this->entityUniqueId = $this->getEntityUniqueId();
@@ -176,6 +180,9 @@ class StartGamePacket extends DataPacket{
 		$this->hasLockedResourcePack = $this->getBool();
 		$this->isFromLockedWorldTemplate = $this->getBool();
 		$this->useMsaGamertagsOnly = $this->getBool();
+		$this->isFromWorldTemplate = $this->getBool();
+		$this->isWorldTemplateOptionLocked = $this->getBool();
+
 
 		$this->levelId = $this->getString();
 		$this->worldName = $this->getString();
@@ -236,6 +243,8 @@ class StartGamePacket extends DataPacket{
 		$this->putBool($this->hasLockedResourcePack);
 		$this->putBool($this->isFromLockedWorldTemplate);
 		$this->putBool($this->useMsaGamertagsOnly);
+		$this->putBool($this->isFromWorldTemplate);
+		$this->putBool($this->isWorldTemplateOptionLocked);
 
 		$this->putString($this->levelId);
 		$this->putString($this->worldName);
