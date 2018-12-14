@@ -42,6 +42,9 @@ class ResourcePackStackPacket extends DataPacket{
 	/** @var ResourcePack[] */
 	public $resourcePackStack = [];
 
+	/** @var bool */
+	public $isExperimental = false;
+
 	protected function decodePayload(){
 		/*$this->mustAccept = $this->getBool();
 		$behaviorPackCount = $this->getUnsignedVarInt();
@@ -75,6 +78,7 @@ class ResourcePackStackPacket extends DataPacket{
 			$this->putString($entry->getPackVersion());
 			$this->putString(""); //TODO
 		}
+		$this->putBool($this->isExperimental);
 	}
 
 	public function handle(NetworkSession $session) : bool{
