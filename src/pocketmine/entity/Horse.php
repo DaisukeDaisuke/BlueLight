@@ -25,6 +25,7 @@ use pocketmine\Player;
 use pocketmine\network\mcpe\protocol\UpdateAttributesPacket;
 use pocketmine\network\mcpe\protocol\AddEntityPacket;
 use pocketmine\network\mcpe\protocol\MobArmorEquipmentPacket;
+use pocketmine\network\mcpe\protocol\SetEntityDataPacket;
 use pocketmine\item\Item as ItemItem;
 use pocketmine\math\Vector3;
 
@@ -56,6 +57,9 @@ class Horse extends Living implements Rideable{
 	public $width = 0.6;
 	public $length = 1.8;
 	public $height = 1.8;
+	public $eyeHeight = 0.0;
+	protected $baseOffset = 0.0;
+	
 	public $maxhealth = 52;
 	public $maxjump = 3;
 
@@ -77,9 +81,9 @@ class Horse extends Living implements Rideable{
 		$pk->pitch = $this->pitch;
 		$button = $player->getServer()->getLanguage()->translateString("entity.horse.button");
 		$flags = (
-			(1 << Entity::DATA_FLAG_WASD_CONTROLLED) |
-			(1 << Entity::DATA_FLAG_CAN_POWER_JUMP) |
 			(1 << Entity::DATA_FLAG_SADDLED) |
+			(1 << Entity::DATA_FLAG_CAN_POWER_JUMP) |
+			(1 << Entity::DATA_FLAG_WASD_CONTROLLED) |
 			(1 << Entity::DATA_FLAG_CAN_SHOW_NAMETAG) |
 			(1 << Entity::DATA_FLAG_ALWAYS_SHOW_NAMETAG)
 		);
@@ -95,7 +99,7 @@ class Horse extends Living implements Rideable{
 		$player->dataPacket($pk);
 		$this->sendAttribute($player);
 		parent::spawnTo($player);
-		//$this->setArmor(419);
+		$this->setSaddle();
 	}
 
 	public function getSaveId(){
@@ -114,6 +118,22 @@ class Horse extends Living implements Rideable{
 
 		ItemItem::get(0,0),
 		ItemItem::get($id,0),
+		ItemItem::get(0,0),
+		ItemItem::get(0,0)
+
+		];
+		foreach($this->level->getPlayers() as $player){
+			$player->dataPacket($pk);
+		}
+	}
+	
+	public function setSaddle(){
+		$pk = new MobArmorEquipmentPacket();
+		$pk->entityRuntimeId = $this->getId();
+		$pk->slots = [
+
+		ItemItem::get(329,0),
+		ItemItem::get(419,0),
 		ItemItem::get(0,0),
 		ItemItem::get(0,0)
 
@@ -149,9 +169,9 @@ class Horse extends Living implements Rideable{
 		$newz = ($this->z - $movez/2);
 
 		if($this->isGoing(new Vector3($newx,$newy,$newz))){
-
-			$this->x -= $movex/2;
-			$this->z -= $movez/2;
+			$this->move(-($movex/2), 0, -($movez/2));
+		}else if($this->isGoing(new Vector3($newx,$newy+1,$newz))){
+			$this->move(-($movex/2), 2, -($movez/2));
 		}
 		$this->updateMovement();
 	}
@@ -165,9 +185,15 @@ class Horse extends Living implements Rideable{
 		$newy = $this->y;
 		$newz = $this->z + $movez;
 		if($this->isGoing(new Vector3($newx,$newy,$newz))){
-			$this->x += $movex;
-			$this->z += $movez;
+			if($this->isCollidedHorizontally){
+				$this->move($movex, 2, $movez);
+			}else{
+				$this->move($movex, 0, $movez);
+			}
+		}else if($this->isGoing(new Vector3($newx,$newy+1,$newz))){
+			$this->move($movex, 2, $movez);
 		}
+		//if($this->onGround)
 		$this->updateMovement();
 	}
 

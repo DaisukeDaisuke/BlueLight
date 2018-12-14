@@ -36,6 +36,7 @@ class NetworkInventoryAction{
 
 	const SOURCE_WORLD = 2; //drop/pickup item entity
 	const SOURCE_CREATIVE = 3;
+	const SOURCE_CRAFTING_GRID = 100;
 	const SOURCE_TODO = 99999;
 
 	/**
@@ -47,8 +48,7 @@ class NetworkInventoryAction{
 	 *
 	 * Expect these to change in the future.
 	 */
-	const SOURCE_TYPE_CRAFTING_ADD_INGREDIENT = -2;
-	const SOURCE_TYPE_CRAFTING_REMOVE_INGREDIENT = -3;
+	const SOURCE_TYPE_CRAFTING_USELESS_MAGIC_NUMBER = -2;
 	const SOURCE_TYPE_CRAFTING_RESULT = -4;
 	const SOURCE_TYPE_CRAFTING_USE_INGREDIENT = -5;
 
@@ -80,7 +80,7 @@ class NetworkInventoryAction{
 	/** @var int */
 	public $sourceType;
 	/** @var int */
-	public $windowId = ContainerIds::NONE;
+	public $windowId;
 	/** @var int */
 	public $unknown = 0;
 	/** @var int */
@@ -106,6 +106,12 @@ class NetworkInventoryAction{
 				break;
 			case self::SOURCE_CREATIVE:
 				break;
+			case self::SOURCE_CRAFTING_GRID:
+				$dummy = $packet->getVarInt();
+				if($dummy !== self::SOURCE_TYPE_CRAFTING_USELESS_MAGIC_NUMBER){
+					throw new \UnexpectedValueException("Useless magic number for crafting-grid type was $dummy, expected " . self::SOURCE_TYPE_CRAFTING_USELESS_MAGIC_NUMBER);
+				}
+			break;
 			case self::SOURCE_TODO:
 				$this->windowId = $packet->getVarInt();
 				break;
@@ -133,6 +139,9 @@ class NetworkInventoryAction{
 				break;
 			case self::SOURCE_CREATIVE:
 				break;
+			case self::SOURCE_CRAFTING_GRID:
+				$packet->putVarInt(self::SOURCE_TYPE_CRAFTING_USELESS_MAGIC_NUMBER);
+			break;
 			case self::SOURCE_TODO:
 				$packet->putVarInt($this->windowId);
 				break;
@@ -183,14 +192,11 @@ class NetworkInventoryAction{
 				}
 
 				return new CreativeInventoryAction($this->oldItem, $this->newItem, $type);
+			case self::SOURCE_CRAFTING_GRID:
+				return new SlotChangeAction($player->getCraftingGrid(), $this->inventorySlot, $this->oldItem, $this->newItem);
 			case self::SOURCE_TODO:
 				//These types need special handling.
 				switch($this->windowId){
-					case self::SOURCE_TYPE_CRAFTING_ADD_INGREDIENT:
-					case self::SOURCE_TYPE_CRAFTING_REMOVE_INGREDIENT:
-						$window = $player->getCraftingGrid();
-						return new SlotChangeAction($window, $this->inventorySlot, $this->oldItem, $this->newItem);
-
 					case self::SOURCE_TYPE_CONTAINER_DROP_CONTENTS:
 						//TODO: this type applies to all fake windows, not just crafting
 						$window = $player->getCraftingGrid();

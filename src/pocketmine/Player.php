@@ -107,6 +107,7 @@ use pocketmine\network\mcpe\PlayerNetworkSessionAdapter;
 use pocketmine\network\mcpe\protocol\AdventureSettingsPacket;
 use pocketmine\network\mcpe\protocol\AnimatePacket;
 use pocketmine\network\mcpe\protocol\AvailableCommandsPacket;
+use pocketmine\network\mcpe\protocol\AvailableEntityIdentifiersPacket;
 use pocketmine\network\mcpe\protocol\BatchPacket;
 use pocketmine\network\mcpe\protocol\BlockEntityDataPacket;
 use pocketmine\network\mcpe\protocol\BlockPickRequestPacket;
@@ -128,6 +129,7 @@ use pocketmine\network\mcpe\protocol\LoginPacket;
 use pocketmine\network\mcpe\protocol\MapInfoRequestPacket;
 use pocketmine\network\mcpe\protocol\MobEquipmentPacket;
 use pocketmine\network\mcpe\protocol\MovePlayerPacket;
+use pocketmine\network\mcpe\protocol\NetworkChunkPublisherUpdatePacket;
 use pocketmine\network\mcpe\protocol\PlayerActionPacket;
 use pocketmine\network\mcpe\protocol\PlayerHotbarPacket;
 use pocketmine\network\mcpe\protocol\PlayerInputPacket;
@@ -1119,6 +1121,14 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 		}
 
 		$this->loadQueue = $newOrder;
+		if(!empty($this->loadQueue) or !empty($unloadChunks)){
+			$pk = new NetworkChunkPublisherUpdatePacket();
+			$pk->x = $this->getFloorX();
+			$pk->y = $this->getFloorY();
+			$pk->z = $this->getFloorZ();
+			$pk->radius = $this->viewDistance * 16; //blocks, not chunks >.>
+			$this->dataPacket($pk);
+		}
 
 		Timings::$playerChunkOrderTimer->stopTiming();
 
@@ -1994,6 +2004,9 @@ class Player extends Human implements CommandSender, ChunkLoader, IPlayer{
 
 			return;
 		}
+
+		$this->sendDataPacket(new AvailableEntityIdentifiersPacket());
+
 
 		$this->level->sendTime($this);
 
