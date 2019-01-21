@@ -116,7 +116,7 @@ class ItemFactory{
 			self::registerItem(new Snowball());
 			self::registerItem(new Boat());
 			self::registerItem(new Item(Item::LEATHER, 0, "Leather"));
-
+			self::registerItem(new Item(Item::KELP, 0, "Kelp"));
 			self::registerItem(new Item(Item::BRICK, 0, "Brick"));
 			self::registerItem(new Item(Item::CLAY_BALL, 0, "Clay"));
 			self::registerItem(new Sugarcane());
@@ -192,9 +192,9 @@ class ItemFactory{
 			//TODO: HOPPER
 			//TODO: RABBIT
 			self::registerItem(new CookedRabbit());
-			//TODO: RABBIT_STEW
+			self::registerItem(new RabbitStew());
 			self::registerItem(new Item(Item::RABBIT_FOOT, 0, "Rabbit's Foot"));
-			//TODO: RABBIT_HIDE
+			self::registerItem(new Item(Item::RABBIT_HIDE, 0, "Rabbit Hide"));
 			//TODO: HORSEARMORLEATHER
 			//TODO: HORSEARMORIRON
 			//TODO: GOLD_HORSE_ARMOR
@@ -202,8 +202,8 @@ class ItemFactory{
 			//TODO: LEAD
 			//TODO: NAMETAG
 			self::registerItem(new Item(Item::PRISMARINE_CRYSTALS, 0, "Prismarine Crystals"));
-			//TODO: MUTTONRAW
-			//TODO: COOKED_MUTTON
+			self::registerItem(new RawMutton());
+			self::registerItem(new CookedMutton());
 
 			//TODO: END_CRYSTAL
 			//TODO: SPRUCE_DOOR
@@ -214,7 +214,7 @@ class ItemFactory{
 			//TODO: CHORUS_FRUIT
 			self::registerItem(new Item(Item::CHORUS_FRUIT_POPPED, 0, "Popped Chorus Fruit"));
 
-			//TODO: DRAGON_BREATH
+			self::registerItem(new Item(Item::DRAGON_BREATH, 0, "Dragon's Breath"));
 			//TODO: SPLASH_POTION
 
 			//TODO: LINGERING_POTION
@@ -223,21 +223,27 @@ class ItemFactory{
 			//TODO: ELYTRA
 			self::registerItem(new Item(Item::SHULKER_SHELL, 0, "Shulker Shell"));
 
-			//TODO: TOTEM
+			self::registerItem(new Totem());
 
 			self::registerItem(new Item(Item::IRON_NUGGET, 0, "Iron Nugget"));
 
 			self::registerItem(new Beetroot());
 			self::registerItem(new BeetrootSeeds());
 			self::registerItem(new BeetrootSoup());
-			//TODO: RAW_SALMON
-			//TODO: CLOWNFISH
-			//TODO: PUFFERFISH
-			//TODO: COOKED_SALMON
-
+			self::registerItem(new RawSalmon());
+			self::registerItem(new Clownfish());
+			self::registerItem(new Pufferfish());
+			self::registerItem(new CookedSalmon());
+			self::registerItem(new DriedKelp());
+			self::registerItem(new Item(Item::NAUTILUS_SHELL, 0, "Nautilus Shell"));
 			self::registerItem(new GoldenAppleEnchanted());
+			self::registerItem(new Item(Item::HEART_OF_THE_SEA, 0, "Heart of the Sea"));
+			self::registerItem(new Item(Item::TURTLE_SHELL_PIECE, 0, "Scute"));
+			self::registerItem(new Item(Item::TURTLE_HELMET, 0, "Turtle Shell"));
+			self::registerItem(new Item(Item::PHANTOM_MEMBRANE, 0, "Phantom Membrane"));
 
-			 self::registerItem(new Fireworks());
+			self::registerItem(new Fireworks());
+			self::registerItem(new Item(Item::FIREWORKS_CHARGE, 0, "Firework Star"));
 		}
 
 		Item::initCreativeItems();
