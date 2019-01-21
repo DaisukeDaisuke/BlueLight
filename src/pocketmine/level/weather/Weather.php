@@ -52,6 +52,8 @@ class Weather{
 	public function __construct(Level $level, $duration = 1200){
 		$this->level = $level;
 		$this->weatherNow = self::SUNNY;
+		$this->strength1 = mt_rand(90000, 110000); //If we're clearing the weather, it doesn't matter what strength values we set
+		$this->strength2 = mt_rand(30000, 40000);
 		$this->duration = $duration;
 		$this->lastUpdate = $level->getServer()->getTick();
 		$this->temporalVector = new Vector3(0, 0, 0);
