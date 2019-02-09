@@ -46,7 +46,6 @@ class PacketPool{
 		static::registerPacket(new AddEntityPacket());
 		static::registerPacket(new RemoveEntityPacket());
 		static::registerPacket(new AddItemEntityPacket());
-		static::registerPacket(new AddHangingEntityPacket());
 		static::registerPacket(new TakeItemEntityPacket());
 		static::registerPacket(new MoveEntityAbsolutePacket());
 		static::registerPacket(new MovePlayerPacket());
@@ -150,9 +149,10 @@ class PacketPool{
 		static::registerPacket(new ScriptCustomEventPacket());
 		static::registerPacket(new SpawnParticleEffectPacket());
 		static::registerPacket(new AvailableEntityIdentifiersPacket());
-		static::registerPacket(new LevelSoundEventPacket());
+		static::registerPacket(new LevelSoundEventPacketV2());
 		static::registerPacket(new NetworkChunkPublisherUpdatePacket());
 		static::registerPacket(new BiomeDefinitionListPacket());
+		static::registerPacket(new LevelSoundEventPacket());
 
 		static::registerPacket(new BatchPacket());
 	}
