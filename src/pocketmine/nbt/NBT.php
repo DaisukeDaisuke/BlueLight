@@ -197,8 +197,8 @@ class NBT{
 		$this->endianness = $endianness & 0x01;
 	}
 
-	public function read($buffer, $doMultiple = false, bool $network = false){
-		$this->offset = 0;
+	public function read($buffer, $doMultiple = false, bool $network = false, int &$offset = 0){
+		$this->offset = &$offset;
 		$this->buffer = $buffer;
 		$this->data = $this->readTag($network);
 		if($doMultiple and $this->offset < strlen($this->buffer)){

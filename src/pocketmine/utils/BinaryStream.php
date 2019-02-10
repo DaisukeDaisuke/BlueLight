@@ -27,8 +27,12 @@ namespace pocketmine\utils;
 
 use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
+use pocketmine\nbt\NetworkLittleEndianNBTStream;
+use pocketmine\nbt\tag\CompoundTag;
 
 class BinaryStream{
+	/** @var NetworkLittleEndianNBTStream */
+	private static $nbtSerializer = null;
 
 	/** @var int */
 	public $offset;
@@ -260,10 +264,21 @@ class BinaryStream{
 		$cnt = $auxValue & 0xff;
 
 		$nbtLen = $this->getLShort();
-		$nbt = "";
 
-		if($nbtLen > 0){
-			$nbt = $this->get($nbtLen);
+		/** @var CompoundTag|string $nbt */
+		$nbt = "";
+		if($nbtLen === 0xffff){
+			$c = $this->getByte();
+			if($c !== 1){
+				throw new \UnexpectedValueException("Unexpected NBT count $c");
+			}
+			
+			$nbtStream = new NetworkLittleEndianNBTStream();
+			$nbtStream->read($this->buffer, false, false, $this->offset);
+			$nbt = $nbtStream->getData();
+			
+		}elseif($nbtLen !== 0){
+			throw new \UnexpectedValueException("Unexpected fake NBT length $nbtLen");
 		}
 
 		//TODO
@@ -285,21 +300,23 @@ class BinaryStream{
 		return ItemFactory::get($id, $data, $cnt, $nbt);
 	}
 
-
 	public function putSlot(Item $item){
 		if($item->getId() === 0){
 			$this->putVarInt(0);
 			return;
 		}
-
 		$this->putVarInt($item->getId());
 		$auxValue = (($item->getDamage() & 0x7fff) << 8) | $item->getCount();
 		$this->putVarInt($auxValue);
-
-		$nbt = $item->getCompoundTag();
-		$this->putLShort(strlen($nbt));
-		$this->put($nbt);
-
+		if($item->hasCompoundTag()){
+			$this->putLShort(0xffff);
+			$this->putByte(1); //TODO: some kind of count field? always 1 as of 1.9.0
+			$nbtStream = new NetworkLittleEndianNBTStream();
+			$nbtStream->setData($item->getNamedTag());
+			$this->put($nbtStream->write());
+		}else{
+			$this->putLShort(0);
+		}
 		$this->putVarInt(0); //CanPlaceOn entry count (TODO)
 		$this->putVarInt(0); //CanDestroy entry count (TODO)
 	}

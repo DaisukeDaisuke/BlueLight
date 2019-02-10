@@ -211,7 +211,7 @@ class Item implements ItemIds, \JsonSerializable{
 	/**
 	 * Sets the Item's NBT
 	 *
-	 * @param CompoundTag|string $tags
+	 * @param CompoundTag|string|null $tags
 	 *
 	 * @return $this
 	 */
@@ -219,7 +219,7 @@ class Item implements ItemIds, \JsonSerializable{
 		if($tags instanceof CompoundTag){
 			$this->setNamedTag($tags);
 		}else{
-			$this->tags = (string) $tags;
+			$this->tags = $tags === null ? "" : (string) $tags;
 			$this->cachedNBT = null;
 		}
 
