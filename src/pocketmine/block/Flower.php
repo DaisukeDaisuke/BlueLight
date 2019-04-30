@@ -38,6 +38,8 @@ class Flower extends Flowable{
 	const TYPE_WHITE_TULIP = 6;
 	const TYPE_PINK_TULIP = 7;
 	const TYPE_OXEYE_DAISY = 8;
+	const TYPE_CORNFLOWER = 9;
+	const TYPE_LILY_OF_THE_VALLEY = 10;
 
 	protected $id = self::RED_FLOWER;
 
@@ -55,7 +57,9 @@ class Flower extends Flowable{
 			self::TYPE_ORANGE_TULIP => "Orange Tulip",
 			self::TYPE_WHITE_TULIP => "White Tulip",
 			self::TYPE_PINK_TULIP => "Pink Tulip",
-			self::TYPE_OXEYE_DAISY => "Oxeye Daisy"
+			self::TYPE_OXEYE_DAISY => "Oxeye Daisy",
+			self::TYPE_CORNFLOWER => "Cornflower",
+			self::TYPE_LILY_OF_THE_VALLEY => "Lily of the Valley",
 		];
 		return $names[$this->meta] ?? "Unknown";
 	}

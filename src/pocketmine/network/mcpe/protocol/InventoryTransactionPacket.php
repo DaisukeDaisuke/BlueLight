@@ -79,6 +79,7 @@ class InventoryTransactionPacket extends DataPacket{
 				$this->trData->itemInHand = $this->getSlot();
 				$this->trData->playerPos = $this->getVector3Obj();
 				$this->trData->clickPos = $this->getVector3Obj();
+				$this->trData->blockRuntimeId = $this->getUnsignedVarInt();
 				break;
 			case self::TYPE_USE_ITEM_ON_ENTITY:
 				$this->trData->entityRuntimeId = $this->getEntityRuntimeId();
@@ -119,6 +120,7 @@ class InventoryTransactionPacket extends DataPacket{
 				$this->putSlot($this->trData->itemInHand);
 				$this->putVector3Obj($this->trData->playerPos);
 				$this->putVector3Obj($this->trData->clickPos);
+				$this->putUnsignedVarInt($this->trData->blockRuntimeId);
 				break;
 			case self::TYPE_USE_ITEM_ON_ENTITY:
 				$this->putEntityRuntimeId($this->trData->entityRuntimeId);

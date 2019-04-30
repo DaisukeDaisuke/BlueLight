@@ -163,7 +163,6 @@ class AvailableCommandsPacket extends DataPacket{
 		$retval["byte1"] = $this->getByte();
 		$retval["byte2"] = $this->getByte();
 		$retval["aliasesEnum"] = $this->enums[$this->getLInt()] ?? null;
-
 		for($i = 0, $overloadCount = $this->getUnsignedVarInt(); $i < $overloadCount; ++$i){
 			for($j = 0, $paramCount = $this->getUnsignedVarInt(); $j < $paramCount; ++$j){
 				$retval["overloads"][$i]["params"][$j]["paramName"] = $this->getString();

@@ -204,6 +204,7 @@ interface ItemIds extends BlockIds{
 	const DARK_OAK_DOOR = 431;
 	const CHORUS_FRUIT = 432;
 	const CHORUS_FRUIT_POPPED = 433;
+	const BANNER_PATTERN = 434;
 
 	const DRAGON_BREATH = 437;
 	const SPLASH_POTION = 438;
@@ -233,6 +234,13 @@ interface ItemIds extends BlockIds{
 	const TURTLE_SHELL_PIECE = 468;
 	const TURTLE_HELMET = 469;
 	const PHANTOM_MEMBRANE = 470;
+	const CROSSBOW = 471;
+	const SPRUCE_SIGN = 472;
+	const BIRCH_SIGN = 473;
+	const JUNGLE_SIGN = 474;
+	const ACACIA_SIGN = 475;
+	const DARKOAK_SIGN = 476;
+	const SWEET_BERRIES = 477;
 
 	const RECORD_13 = 500;
 	const RECORD_CAT = 501;
@@ -246,5 +254,7 @@ interface ItemIds extends BlockIds{
 	const RECORD_WARD = 509;
 	const RECORD_11 = 510;
 	const RECORD_WAIT = 511;
+
+	const SHIELD = 513;
 
 }

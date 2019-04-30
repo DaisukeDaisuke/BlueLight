@@ -27,6 +27,7 @@ namespace pocketmine\utils;
 
 use pocketmine\item\Item;
 use pocketmine\item\ItemFactory;
+use pocketmine\item\ItemIds;
 use pocketmine\nbt\NetworkLittleEndianNBTStream;
 use pocketmine\nbt\tag\CompoundTag;
 
@@ -250,7 +251,7 @@ class BinaryStream{
 		$this->putLInt($uuid->getPart(2));
 	}
 
-	public function getSlot() : Item{
+	public function getSlot(){
 		$id = $this->getVarInt();
 		if($id <= 0){
 			return ItemFactory::get(0, 0, 0);
@@ -297,6 +298,10 @@ class BinaryStream{
 			}
 		}
 
+		if($id === ItemIds::SHIELD){
+			$this->getVarLong(); //"blocking tick" (ffs mojang)
+		}
+
 		return ItemFactory::get($id, $data, $cnt, $nbt);
 	}
 
@@ -319,6 +324,10 @@ class BinaryStream{
 		}
 		$this->putVarInt(0); //CanPlaceOn entry count (TODO)
 		$this->putVarInt(0); //CanDestroy entry count (TODO)
+
+		if($item->getId() === ItemIds::SHIELD){
+			$this->putVarLong(0); //"blocking tick" (ffs mojang)
+		}
 	}
 
 	/**

@@ -124,7 +124,7 @@ class PacketPool{
 		static::registerPacket(new PurchaseReceiptPacket());
 		static::registerPacket(new PlayerSkinPacket());
 		static::registerPacket(new SubClientLoginPacket());
-		static::registerPacket(new WSConnectPacket());
+		static::registerPacket(new AutomationClientConnectPacket());
 		static::registerPacket(new SetLastHurtByPacket());
 		static::registerPacket(new BookEditPacket());
 		static::registerPacket(new NpcRequestPacket());
@@ -153,6 +153,8 @@ class PacketPool{
 		static::registerPacket(new NetworkChunkPublisherUpdatePacket());
 		static::registerPacket(new BiomeDefinitionListPacket());
 		static::registerPacket(new LevelSoundEventPacket());
+		static::registerPacket(new LecternUpdatePacket());
+		static::registerPacket(new VideoStreamConnectPacket());
 
 		static::registerPacket(new BatchPacket());
 	}
